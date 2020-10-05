@@ -106,7 +106,7 @@ app.put('/prospecto/:id', (req, res) => {
         rfc: body.rfc
     }
 
-    Prospecto.findByIdAndUpdate(id, descProspecto, { new: true, runValidators: true }, (err, prospectoDB) => {
+    Prospecto.findByIdAndUpdate(id, descProspecto , (err, prospectoDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -125,7 +125,7 @@ app.put('/prospecto/:id', (req, res) => {
 
         res.json({
             ok: true,
-            categoria: prospectoDB
+            prospecto: prospectoDB
         });
 
     });
@@ -141,7 +141,7 @@ app.put('/prospecto/:id/autorizado', (req, res) => {
         estatus:body.estatus
     }
 
-    Prospecto.findByIdAndUpdate(id, descProspecto, { new: true, runValidators: true }, (err, prospectoDB) => {
+    Prospecto.findByIdAndUpdate(id, descProspecto, (err, prospectoDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -160,7 +160,7 @@ app.put('/prospecto/:id/autorizado', (req, res) => {
 
         res.json({
             ok: true,
-            categoria: prospectoDB
+            prospecto: prospectoDB
         });
 
     });
