@@ -30,7 +30,7 @@ app.get('/prospecto', (req, res) => {
 app.get('/prospecto/:id', (req, res) => {
     let id = req.params.id;
 
-    Producto.findById(id, (err, prospectoDB) => {
+    Prospecto.findById(id, (err, prospectoDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -90,7 +90,7 @@ app.post('/prospecto', (req, res) => {
     });
 });
 
-app.put('/producto/:id', (req, res) => {
+app.put('/prospecto/:id', (req, res) => {
 
     let id = req.params.id;
     let body = req.body;
@@ -132,7 +132,7 @@ app.put('/producto/:id', (req, res) => {
 
 });
 
-app.put('/producto/:id/autorizado', (req, res) => {
+app.put('/prospecto/:id/autorizado', (req, res) => {
 
     let id = req.params.id;
     let body = req.body;
