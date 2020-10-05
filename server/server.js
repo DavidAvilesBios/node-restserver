@@ -16,6 +16,13 @@ app.use(require('./routes/index'));
 // habilitar la carpeta public
 app.use(express.static(path.resolve(__dirname, '../public')));
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "YOUR-DOMAIN.TLD"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+  
+
 mongoose.connect(process.env.URLDB, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }, (err, res) => {
     if (err) throw err;
 
