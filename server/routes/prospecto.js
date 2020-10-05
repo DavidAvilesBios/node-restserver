@@ -132,6 +132,40 @@ app.put('/producto/:id', (req, res) => {
 
 });
 
+app.put('/producto/:id/autorizado', (req, res) => {
+
+    let id = req.params.id;
+    let body = req.body;
+
+    let descProspecto = {
+        estatus:body.estatus
+    }
+
+    Prospecto.findByIdAndUpdate(id, descProspecto, { new: true, runValidators: true }, (err, prospectoDB) => {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                err
+            });
+        }
+
+        if (!prospectoDB) {
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: 'No se encontro el prospecto para editar'
+                }
+            });
+        }
+
+        res.json({
+            ok: true,
+            categoria: prospectoDB
+        });
+
+    });
+
+});
 /*app.get('/producto/buscar/:termino', verificaToken, (req, res) => {
     let termino = req.params.termino;
 
