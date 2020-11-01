@@ -1,18 +1,16 @@
 const express = require('express');
 
-let { verificaToken, verificaAdmin_Role } = require('../middlewares/autenticacion');
-
 let app = express();
 
-let Producto = require('../models/producto');
+let Prospecto = require('../models/prospecto');
 
 //==================
 // Obtener productos
 //==================
 
-app.get('/producto', verificaToken, (req, res) => {
+app.get('/prospecto', (req, res) => {
 
-    Producto.find({ disponible: true }).exec((err, productos) => {
+    Prospecto.find().exec((err, prospectos) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
@@ -22,17 +20,17 @@ app.get('/producto', verificaToken, (req, res) => {
 
         res.json({
             ok: true,
-            productos
+            prospectos
         });
     });
 
 
 });
 
-app.get('/producto/:id', verificaToken, (req, res) => {
+app.get('/prospecto/:id', (req, res) => {
     let id = req.params.id;
 
-    Producto.findById(id, (err, productoDB) => {
+    Prospecto.findById(id, (err, prospectoDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -40,7 +38,7 @@ app.get('/producto/:id', verificaToken, (req, res) => {
             });
         }
 
-        if (!productoDB) {
+        if (!prospectoDB) {
             return res.status(400).json({
                 ok: false,
                 err: {
@@ -51,23 +49,26 @@ app.get('/producto/:id', verificaToken, (req, res) => {
 
         res.json({
             ok: true,
-            producto: productoDB
+            producto: prospectoDB
         });
     });
 });
 
-app.post('/producto', verificaToken, (req, res) => {
+app.post('/prospecto', (req, res) => {
     let body = req.body;
 
-    let producto = new Producto({
+    let prospecto = new Prospecto({
         nombre: body.nombre,
-        precioUni: body.precioUni,
-        descripcion: body.descripcion,
-        categoria: body.categoria,
-        usuario: req.usuario._id,
+        apellido: body.apellido,
+        segundoApellido: body.segundoApellido,
+        calle: body.calle,
+        numeroCasa: body.numeroCasa,
+        colonia: body.colonia,
+        codigoPostal: body.codigoPostal,
+        rfc: body.rfc
     });
 
-    producto.save((err, productoDB) => {
+    prospecto.save((err, prospectoDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -75,7 +76,7 @@ app.post('/producto', verificaToken, (req, res) => {
             });
         }
 
-        if (!productoDB) {
+        if (!prospectoDB) {
             return res.status(400).json({
                 ok: false,
                 err
@@ -84,23 +85,28 @@ app.post('/producto', verificaToken, (req, res) => {
 
         res.json({
             ok: true,
-            categoria: productoDB
+            categoria: prospectoDB
         });
     });
 });
 
-app.put('/producto/:id', (req, res) => {
+app.put('/prospecto/:id', (req, res) => {
 
     let id = req.params.id;
     let body = req.body;
 
-    let descProducto = {
+    let descProspecto = {
         nombre: body.nombre,
-        precioUni: body.precioUni,
-        descripcion: body.descripcion,
+        apellido: body.apellido,
+        segundoApellido: body.segundoApellido,
+        calle: body.calle,
+        numeroCasa: body.numeroCasa,
+        colonia: body.colonia,
+        codigoPostal: body.codigoPostal,
+        rfc: body.rfc
     }
 
-    Producto.findByIdAndUpdate(id, descProducto, { new: true, runValidators: true }, (err, productoDB) => {
+    Prospecto.findByIdAndUpdate(id, descProspecto , (err, prospectoDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -108,25 +114,89 @@ app.put('/producto/:id', (req, res) => {
             });
         }
 
-        if (!productoDB) {
+        if (!prospectoDB) {
             return res.status(400).json({
                 ok: false,
                 err: {
-                    message: 'No se encontro el producto para editar'
+                    message: 'No se encontro el prospecto para editar'
                 }
             });
         }
 
         res.json({
             ok: true,
-            categoria: productoDB
+            prospecto: prospectoDB
         });
 
     });
 
 });
 
-app.get('/producto/buscar/:termino', verificaToken, (req, res) => {
+app.put('/prospecto/:id/autorizado', (req, res) => {
+
+    let id = req.params.id;
+    let body = req.body;
+
+    let descProspecto = {
+        estatus:body.estatus
+    }
+
+    Prospecto.findByIdAndUpdate(id, descProspecto, (err, prospectoDB) => {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                err
+            });
+        }
+
+        if (!prospectoDB) {
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: 'No se encontro el prospecto para editar'
+                }
+            });
+        }
+
+        res.json({
+            ok: true,
+            prospecto: prospectoDB
+        });
+
+    });
+
+});
+
+app.delete('/prospecto/:id', (req, res) => {
+    let id = req.params.id;
+
+
+    Prospecto.findOneAndDelete(id, (err, prospectoBorrado) => {
+
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                err
+            });
+        };
+
+        if (!prospectoBorrado) {
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: 'Prospecto no encontrado'
+                }
+            })
+        }
+
+        res.json({
+            ok: true,
+            message: 'El Prospecto ha sido borrado exitosamente'
+        });
+    });
+
+})
+/*app.get('/producto/buscar/:termino', verificaToken, (req, res) => {
     let termino = req.params.termino;
 
     let regex = new RegExp(termino, 'i');
@@ -179,6 +249,6 @@ app.delete('/producto/:id', (req, res) => {
         });
     });
 
-});
+});*/
 
 module.exports = app;
