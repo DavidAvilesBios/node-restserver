@@ -166,6 +166,36 @@ app.put('/prospecto/:id/autorizado', (req, res) => {
     });
 
 });
+
+app.delete('/prospecto/:id', (req, res) => {
+    let id = req.params.id;
+
+
+    Prospecto.findOneAndDelete(id, (err, prospectoBorrado) => {
+
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                err
+            });
+        };
+
+        if (!prospectoBorrado) {
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: 'Prospecto no encontrado'
+                }
+            })
+        }
+
+        res.json({
+            ok: true,
+            message: 'El Prospecto ha sido borrado exitosamente'
+        });
+    });
+
+})
 /*app.get('/producto/buscar/:termino', verificaToken, (req, res) => {
     let termino = req.params.termino;
 
